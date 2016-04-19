@@ -1,0 +1,222 @@
+
+;;RUST stuff
+;; Reduce the time after which the company auto completion popup opens
+(setq company-idle-delay 0.2)
+
+;; Reduce the number of characters before company kicks in
+(setq company-minimum-prefix-length 1)
+
+;; Set path to racer binary
+(setq racer-cmd "/usr/local/bin/racer")
+
+;; Set path to rust src directory
+(setq racer-rust-src-path "/Users/toddroth/.rust/src/")
+
+;; Load rust-mode when you open `.rs` files
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+
+;; Setting up configurations when you load rust-mode
+;;(add-hook 'racer-mode-hook #'company-mode)
+(add-hook 'rust-mode-hook #'racer-mode)
+(add-hook 'racer-mode-hook #'eldoc-mode)
+(add-hook 'racer-mode-hook #'company-mode)
+;;(global-set-key (kbd "SPC") #'company-indent-or-complete-common) ;
+(global-set-key (kbd "TAB") #'company-complete)
+(setq company-tooltip-align-annotations t)
+
+
+
+;;GO stuff
+;;run gofmt before save
+(setq exec-path (cons "/usr/local/go/bin" exec-path))
+(add-to-list 'exec-path "/Users/toddroth/gowork/bin")
+(add-hook 'before-save-hook 'gofmt-before-save)
+;;(add-hook 'before-save-hook #'gofmt-before-save)
+
+(defun auto-complete-for-go ()
+  (auto-complete-mode 1))
+(add-hook 'go-mode-hook 'auto-complete-for-go)
+(with-eval-after-load 'go-mode
+   (require 'go-autocomplete))
+
+
+
+;; ido-mode
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
+
+(global-set-key (kbd "C-c SPC") 'auto-complete)
+
+;;package manager setup
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+;;ledger-mode
+;;(add-to-list 'auto-mode-alist '("\\.ledger\\'" . ledger-mode))
+(add-to-list 'auto-mode-alist '("\\.journal\\'" . ledger-mode))
+
+;; setup files ending in ".tpl" to open in html-mode
+(add-to-list 'auto-mode-alist '("\\.tpl\\'" . html-mode))
+(add-to-list 'load-path "~/.emacs.d/addons/")
+(require 'org-collector)
+;;haskell mode
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+
+;;javascript mode
+(add-hook 'js-mode-hook 'js2-minor-mode)
+(add-hook 'js2-mode-hook 'ac-js2-mode)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
+ '(ansi-color-names-vector
+   ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
+ '(custom-enabled-themes (quote (wombat)))
+ '(custom-safe-themes
+   (quote
+    ("1cd9defef2a98138c732728568b04043afd321eb802d25a254777de9b2463768" "9dae95cdbed1505d45322ef8b5aa90ccb6cb59e0ff26fef0b8f411dfc416c552" default)))
+ '(fci-rule-color "#383838")
+ '(ledger-reports
+   (quote
+    (("sample2" "bal")
+     ("sample" "ledger bal")
+     ("bal" "ledger -f %(ledger-file) bal")
+     ("reg" "ledger -f %(ledger-file) reg")
+     ("payee" "ledger -f %(ledger-file) reg @%(payee)")
+     ("account" "ledger -f %(ledger-file) reg %(account)"))))
+ '(org-modules
+   (quote
+    (org-bbdb org-bibtex org-docview org-gnus org-info org-irc org-mhe org-rmail org-w3m org-collector)))
+ '(vc-annotate-background "#2B2B2B")
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#BC8383")
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3"))))
+ '(vc-annotate-very-old-color "#DC8CC3"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+;;Org-mode stuff
+(require 'org)
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(define-key global-map "\C-cc" 'org-capture)
+(setq org-log-done t)
+(setq org-agenda-files
+   (quote
+    ("~/Documents/notes/cme.org" "~/Documents/notes/index.org")))
+(setq org-startup-indented t)
+(setq org-agenda-ndays 7)
+;;(setq org-hide-leading-stars t)
+;;(setq org-agenda-files (list "~/Documents/notes))"
+;;                             "~/Documents/org/home.org"))
+;;(setq org-default-notes-file (expand-file-name "~/Documents/notes/index.org"))
+(setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                 (org-agenda-files :maxlevel . 9))))
+
+;;(setq org-refile-targets '((org-agenda-files . (:maxlevel . 6))))
+(setq org-capture-templates
+  '(("t" "Todo" entry (file+headline "~/Documents/notes/index.org" "Tasks")
+     "* TODO %?\n  %u\n")
+    ("c" "CME" entry (file+headline "~/Documents/notes/index.org" "Tasks")
+     "* TODO %?
+:PROPERTIES:
+:Title:    
+:URL:      
+:Certificate URL: 
+:Resource: 
+:Type:     CAT-1
+:Credit:   1.0
+:Completed: %t
+:MainCategory: General
+:SubCategory: 
+:Modality: 
+:Entered: %u
+:END:      ")))
+
+
+
+;;mutt stuff
+(server-start)
+(add-to-list ‘auto-mode-alist ‘(“/mutt” . mail-mode))
+
+;;    ("c" "CME" entry (file+headline "~/Documents/notes/index.org" "Tasks")
+;;             "* TODO %?  
+;;    | TITLE:           |                   |
+;;    | RESOURCE:        | CDR               |
+;;    | URL:             |                   |
+;;    | CREDIT_TYPE:     | CAT-1             |
+;;    | CREDIT:          | 0.0               |
+;;    | CERTIFICATE_URL: |                   |
+;;    | DATE_COMPLETED:  |                   |
+;;    | CATEGORY:        |                   |
+;;    | SUBCATEGORY:     |                   |
+;;    | MODALITY:        |                   |           
+;;    | ENTERED:         | %u                |" )))
+
+
+exec-path-from-shell
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+   
+;;ocaml stuff
+(add-hook 'tuareg-mode-hook 'tuareg-imenu-set-imenu)
+(setq auto-mode-alist
+      (append '(("\\.ml[ily]?$" . tuareg-mode)
+                ("\\.topml$" . tuareg-mode))
+              auto-mode-alist)) 
+(autoload 'utop-setup-ocaml-buffer "utop" "Toplevel for OCaml" t)
+(add-hook 'tuareg-mode-hook 'utop-setup-ocaml-buffer)
+(add-hook 'tuareg-mode-hook 'merlin-mode)
+(setq merlin-use-auto-complete-mode 'easy)
+(setq merlin-error-after-save nil)
+
+
+;;merlin stuff
+(setq opam-share (substring (shell-command-to-string "opam config var share") 0 -1))
+(add-to-list 'load-path (concat opam-share "/emacs/site-lisp"))
+(require 'ocp-indent)
+(require 'merlin)
+
+;; Enable Merlin for ML buffers
+;;(add-hook 'tuareg-mode-hook 'merlin-mode)
+
+;; So you can do it on a mac, where `C-<up>` and `C-<down>` are used
+;; by spaces.
+;;(define-key merlin-mode-map
+;;  (kbd "C-c <up>") 'merlin-type-enclosing-go-up)
+;;(define-key merlin-mode-map
+;;  (kbd "C-c <down>") 'merlin-type-enclosing-go-down)
+;;(set-face-background 'merlin-type-face "#88FF44")
+
+;; -- enable auto-complete -------------------------------
+;; Not required, but useful along with merlin-mode
+(require 'auto-complete)
+(add-hook 'tuareg-mode-hook 'auto-complete-mode)
+
+
